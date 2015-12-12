@@ -1,0 +1,25 @@
+<template name="configureLoginServiceDialogForMicrosoft">
+    <p>
+        First, you'll need to get a Microsoft Application Client ID and Client secret. Follow these steps:
+    </p>
+    <ol>
+        <li>
+            Visit <a href="https://account.live.com/developers/applications/create" target="blank">https://account.live.com/developers/applications/create</a> and login
+        </li>
+        <li>
+            Fill in the form to create your Microsoft Application
+        </li>
+        <li>
+            When redirected to the edit page, on the left sidebar, go to "API Settings"
+        </li>
+        <li>
+            Set Authorized Redirect URLs to: <span class="url">{{siteUrl}}</span>
+        </li>
+        <li>
+            Finish by clicking "Save"
+        </li>
+        <li>
+            On the left sidebar, go to "App Settings" to find the "Client ID" and "Client secret"
+        </li>
+    </ol>
+</template>
