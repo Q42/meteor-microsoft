@@ -14,5 +14,5 @@ meteor add q42:microsoft
 
 The usage is pretty much the same as all other OAuth flow implementations for meteor. It's inspired by the official Google meteor package.
 
-[travis-url]: https://travis-ci.org/Q42/meteor-dutchman
-[travis-image]: http://img.shields.io/travis/Q42/meteor-dutchman.svg
+[travis-url]: https://travis-ci.org/Q42/meteor-microsoft
+[travis-image]: http://img.shields.io/travis/Q42/meteor-microsoft.svg
