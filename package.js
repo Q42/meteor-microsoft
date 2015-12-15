@@ -11,18 +11,17 @@ Package.onUse(function(api) {
 
   api.use('ecmascript');
   api.use('dburles:eslint');
+  api.use('templating', 'client');
+  api.use('random', 'client');
   api.use('oauth2', ['client', 'server']);
   api.use('oauth', ['client', 'server']);
   api.use('http', ['server']);
 
   api.export('Microsoft');
 
-  api.addFiles(
-      ['configure.html', 'configure.js'],
-      'client');
-
+  api.addFiles('client/configure.html', 'client');
   api.addFiles('server/server.js', 'server');
-  api.addFiles('client/client.js', 'client');
+  api.addFiles(['client/client.js', 'client/configure.js'], 'client');
 });
 
 Package.onTest(function(api) {
@@ -31,7 +30,5 @@ Package.onTest(function(api) {
   api.use('q42:microsoft');
 
   // Tests will follow soon!
-  api.addFiles([
-    'test/client/dutchman.test.js'
-  ]);
+  api.addFiles([]);
 });

@@ -1,6 +1,8 @@
 Microsoft = {};
 
-// Request Google credentials for the user
+// https://msdn.microsoft.com/en-us/library/office/dn659750.aspx
+
+// Request Microsoft credentials for the user
 // @param options {optional}
 // @param credentialRequestCompleteCallback {Function} Callback function to call on
 //   completion. Takes one argument, credentialToken on success, or Error on
@@ -21,68 +23,54 @@ Microsoft.requestCredential = function (options, credentialRequestCompleteCallba
         return;
     }
 
-/*
-     This is the google variety, fix it to work with Microsoft authentication!
-*/
+    var credentialToken = Random.secret();
 
-    //
-    //var credentialToken = Random.secret();
-    //
-    //// always need this to get user id from google.
-    //var requiredScope = ['profile'];
-    //var scope = ['email'];
-    //if (options.requestPermissions)
-    //    scope = options.requestPermissions;
-    //scope = _.union(scope, requiredScope);
-    //
-    //var loginUrlParameters = {};
-    //if (config.loginUrlParameters){
-    //    _.extend(loginUrlParameters, config.loginUrlParameters)
-    //}
-    //if (options.loginUrlParameters){
-    //    _.extend(loginUrlParameters, options.loginUrlParameters)
-    //}
-    //var ILLEGAL_PARAMETERS = ['response_type', 'client_id', 'scope', 'redirect_uri', 'state'];
-    //// validate options keys
-    //_.each(_.keys(loginUrlParameters), function (key) {
-    //    if (_.contains(ILLEGAL_PARAMETERS, key))
-    //        throw new Error("Google.requestCredential: Invalid loginUrlParameter: " + key);
-    //});
-    //
-    //// backwards compatible options
-    //if (options.requestOfflineToken != null){
-    //    loginUrlParameters.access_type = options.requestOfflineToken ? 'offline' : 'online'
-    //}
-    //if (options.prompt != null) {
-    //    loginUrlParameters.prompt = options.prompt;
-    //} else if (options.forceApprovalPrompt) {
-    //    loginUrlParameters.prompt = 'consent'
-    //}
-    //
-    //if (options.loginHint) {
-    //    loginUrlParameters.login_hint = options.loginHint;
-    //}
-    //
-    //var loginStyle = OAuth._loginStyle('google', config, options);
-    //// https://developers.google.com/accounts/docs/OAuth2WebServer#formingtheurl
-    //_.extend(loginUrlParameters, {
-    //    "response_type": "code",
-    //    "client_id":  config.clientId,
-    //    "scope": scope.join(' '), // space delimited
-    //    "redirect_uri": OAuth._redirectUri('google', config),
-    //    "state": OAuth._stateParam(loginStyle, credentialToken, options.redirectUrl)
-    //});
-    //var loginUrl = 'https://accounts.google.com/o/oauth2/auth?' +
-    //    _.map(loginUrlParameters, function(value, param){
-    //        return encodeURIComponent(param) + '=' + encodeURIComponent(value);
-    //    }).join("&");
-    //
-    //OAuth.launchLogin({
-    //    loginService: "google",
-    //    loginStyle: loginStyle,
-    //    loginUrl: loginUrl,
-    //    credentialRequestCompleteCallback: credentialRequestCompleteCallback,
-    //    credentialToken: credentialToken,
-    //    popupOptions: { height: 600 }
-    //});
+    // always need this to get user id from google.
+    var scope = ['wl.signin', 'wl.emails'];
+    if (options.requestPermissions)
+        _.union(scope, options.requestPermissions);
+
+    var loginUrlParameters = {};
+    if (config.loginUrlParameters){
+        _.extend(loginUrlParameters, config.loginUrlParameters)
+    }
+    if (options.loginUrlParameters){
+        _.extend(loginUrlParameters, options.loginUrlParameters)
+    }
+    var ILLEGAL_PARAMETERS = ['response_type', 'client_id', 'scope', 'redirect_uri', 'state'];
+    // validate options keys
+    _.each(_.keys(loginUrlParameters), function (key) {
+        if (_.contains(ILLEGAL_PARAMETERS, key))
+            throw new Error("Microsoft.requestCredential: Invalid loginUrlParameter: " + key);
+    });
+
+    console.log(OAuth._redirectUri('microsoft', config));
+
+    var loginStyle = OAuth._loginStyle('microsoft', config, options);
+    // https://msdn.microsoft.com/en-us/library/office/dn659750.aspx
+    _.extend(loginUrlParameters, {
+        "response_type": "code",
+        "client_id":  config.clientId,
+        "scope": scope.join(' '), // space delimited
+        "redirect_uri": OAuth._redirectUri('microsoft', config),
+        "state": OAuth._stateParam(loginStyle, credentialToken, options.redirectUrl)
+    });
+
+    console.log(loginUrlParameters);
+
+    var loginUrl = 'https://login.live.com/oauth20_authorize.srf?' +
+        _.map(loginUrlParameters, function(value, param){
+            return encodeURIComponent(param) + '=' + encodeURIComponent(value);
+        }).join("&");
+
+    console.log(loginUrl);
+
+    OAuth.launchLogin({
+        loginService: "microsoft",
+        loginStyle: loginStyle,
+        loginUrl: loginUrl,
+        credentialRequestCompleteCallback: credentialRequestCompleteCallback,
+        credentialToken: credentialToken,
+        popupOptions: { height: 600 }
+    });
 };
