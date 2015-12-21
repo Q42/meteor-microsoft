@@ -7,6 +7,8 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
+  api.versionsFrom('1.2.1');
+
   api.use('templating', 'client');
   api.use('random', 'client');
   api.use('oauth2', ['client', 'server']);
