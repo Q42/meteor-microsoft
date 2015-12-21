@@ -1,6 +1,6 @@
 Template.configureLoginServiceDialogForMicrosoft.helpers({
     siteUrl: function () {
-        return Meteor.absoluteUrl();
+        return Meteor.absoluteUrl() + "_oauth/" + Microsoft.serviceName;
     }
 });
 

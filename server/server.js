@@ -1,19 +1,25 @@
-Microsoft = {};
+Microsoft = {
 
-// https://msdn.microsoft.com/en-us/library/office/dn659736.aspx
-Microsoft.whitelistedFields = ['id', 'emails', 'first_name', 'last_name', 'name', 'gender', 'locale'];
+    serviceName: 'microsoft',
+    // https://msdn.microsoft.com/en-us/library/office/dn659736.aspx
+    whitelistedFields: ['id', 'emails', 'first_name', 'last_name', 'name', 'gender', 'locale'],
 
-OAuth.registerService('microsoft', 2, null, function(query) {
+    retrieveCredential: function(credentialToken, credentialSecret) {
+        return OAuth.retrieveCredential(credentialToken, credentialSecret);
+    }
+};
 
-    const response = getTokens(query),
+OAuth.registerService(Microsoft.serviceName, 2, null, function(query) {
+
+    var response = getTokens(query),
         expiresAt = (+new Date) + (1000 * parseInt(response.expiresIn, 10)),
         identity = getIdentity(response.accessToken),
         serviceData = {
-        accessToken: response.accessToken,
-        idToken: response.idToken,
-        expiresAt: expiresAt,
-        scope: response.scope
-    };
+            accessToken: response.accessToken,
+            idToken: response.idToken,
+            expiresAt: expiresAt,
+            scope: response.scope
+        };
 
     var fields = _.pick(identity, Microsoft.whitelistedFields);
     _.extend(serviceData, fields);
@@ -35,9 +41,10 @@ OAuth.registerService('microsoft', 2, null, function(query) {
 // - expiresIn: lifetime of token in seconds
 // - refreshToken, if this is the first authorization request
 var getTokens = function (query) {
-    var config = ServiceConfiguration.configurations.findOne({service: 'microsoft'});
-    if (!config)
+    var config = ServiceConfiguration.configurations.findOne({service: Microsoft.serviceName});
+    if (!config) {
         throw new ServiceConfiguration.ConfigError();
+    }
 
     var response;
     try {
@@ -46,12 +53,14 @@ var getTokens = function (query) {
                 code: query.code,
                 client_id: config.clientId,
                 client_secret: OAuth.openSecret(config.secret),
-                redirect_uri: OAuth._redirectUri('microsoft', config),
+                redirect_uri: OAuth._redirectUri(Microsoft.serviceName, config),
                 grant_type: 'authorization_code'
             }});
     } catch (err) {
-        throw _.extend(new Error("Failed to complete OAuth handshake with Microsoft. " + err.message),
-            {response: err.response});
+        throw _.extend(
+            new Error("Failed to complete OAuth handshake with Microsoft. " + err.message),
+            {response: err.response}
+        );
     }
 
     if (response.data.error) { // if the http response was a json object with an error attribute
@@ -70,13 +79,11 @@ var getIdentity = function (accessToken) {
     try {
         return HTTP.get(
             "https://apis.live.net/v5.0/me",
-            {params: {access_token: accessToken}}).data;
+            { params: { access_token: accessToken } }).data;
     } catch (err) {
-        throw _.extend(new Error("Failed to fetch identity from Microsoft. " + err.message),
-            {response: err.response});
+        throw _.extend(
+            new Error("Failed to fetch identity from Microsoft. " + err.message),
+            { response: err.response }
+        );
     }
-};
-
-Microsoft.retrieveCredential = function(credentialToken, credentialSecret) {
-    return OAuth.retrieveCredential(credentialToken, credentialSecret);
 };

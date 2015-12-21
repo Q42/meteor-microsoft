@@ -13,6 +13,14 @@ meteor add q42:microsoft
 ## Basic usage
 
 The usage is pretty much the same as all other OAuth flow implementations for meteor. It's inspired by the official Google meteor package.
+Basically you can use:
+
+```javascript
+var callback = Accounts.oauth.credentialRequestCompleteHandler(callback);
+Microsoft.requestCredential(options, callback);
+```
+
+For examples and more information on what options you can use, check out: [q42:accounts-microsoft](https://github.com/Q42/meteor-accounts-microsoft).
 
 ## References
 
