@@ -54,7 +54,7 @@ var getLoginUrlOptions = function(loginStyle, credentialToken, config, options) 
     }
     // All other request permissions in the options object is afterward parsed
     if (options.requestPermissions) {
-        _.union(scope, options.requestPermissions);
+        scope = _.union(scope, options.requestPermissions);
     }
 
     var loginUrlParameters = {};
