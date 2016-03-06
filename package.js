@@ -1,6 +1,6 @@
 Package.describe({
   name: 'q42:microsoft',
-  version: '1.0.0',
+  version: '1.0.1',
   summary: 'An implementation of the Microsoft OAuth flow.',
   git: 'https://github.com/Q42/meteor-microsoft',
   documentation: 'README.md'
@@ -8,7 +8,7 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.versionsFrom('1.2.1');
-
+  api.use('ecmascript');
   api.use('templating', 'client');
   api.use('random', 'client');
   api.use('oauth2', ['client', 'server']);
